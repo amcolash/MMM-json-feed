@@ -13,11 +13,7 @@ modules: [
     module: 'MMM-json-feed',
     position: 'bottom_bar',
     config: {
-      prettyName: true,
-      title: 'JSON Feed',
-      url: 'http://your.server.json.here/abc.json',
-      updateInterval: 60000 // update interval in milliseconds
-      values: []
+      url: 'http://your.server.json.here/abc.json'
     }
   }
 ]
