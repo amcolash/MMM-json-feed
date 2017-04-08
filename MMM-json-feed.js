@@ -4,10 +4,11 @@ Module.register("MMM-json-feed", {
 
   result: {},
   defaults: {
-    updateInterval: 600000,
+    prettyName: true,
+    title: 'JSON Feed',
     url: '',
-    values: [],
-    fadeSpeed: 500
+    updateInterval: 600000,
+    values: []
   },
 
   start: function() {
@@ -31,18 +32,26 @@ Module.register("MMM-json-feed", {
 
     var data = this.result;
     var statElement =  document.createElement("header");
-    var title = "ScaleIoT";
+    var title = this.config.title;
     statElement.innerHTML = title;
     wrapper.appendChild(statElement);
 
     if (data && !this.isEmpty(data)) {
       var tableElement = document.createElement("table");
 
-      for (var item in values) {
-        if (data[item]) {
-          var lastRow = document.createElement("tr");
-          lastRow.innerHTML = item + ": " + JSON.stringify(data[item]);
-          tableElement.appendChild(lastRow);
+
+      var values = this.config.values;
+      if (values.length > 0) {
+        for (var i = 0; i < values.length; i++) {
+          if (data[values[i]]) {
+            tableElement.appendChild(this.addValue(values[i], data[values[i]]));
+          }
+        }
+      } else {
+        for (var key in data) {
+          if (data.hasOwnProperty(key)) {
+            tableElement.appendChild(this.addValue(key, data[key]));
+          }
         }
       }
 
@@ -54,6 +63,17 @@ Module.register("MMM-json-feed", {
     }
 
     return wrapper;
+  },
+
+  addValue: function(name, value) {
+    var row = document.createElement("tr");
+    if (this.config.prettyName) {
+      name = name.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
+      name = name.split("_").join(" ");
+      name = name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
+    row.innerHTML = name + ": " + JSON.stringify(value);
+    return row;
   },
 
   scheduleUpdate: function(delay) {
@@ -75,8 +95,9 @@ Module.register("MMM-json-feed", {
   socketNotificationReceived: function(notification, payload) {
     if (notification === "STATS_RESULT") {
       this.result = payload;
-      console.log("fade: " + self.config.fadeSpeed);
-      this.updateDom(self.config.fadeSpeed);
+      var fade = 500;
+      console.log("fade: " + fade);
+      this.updateDom(fade);
     }
   },
 

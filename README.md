@@ -13,8 +13,11 @@ modules: [
 		module: 'MMM-json-feed',
 		position: 'bottom_bar',
 		config: {
+      prettyName: true,
+      title: 'JSON Feed',
 			url: 'http://your.server.json.here/abc.json',
 			updateInterval: 60000 // update interval in milliseconds
+      values: []
 		}
 	}
 ]
@@ -22,5 +25,8 @@ modules: [
 
 | Option               | Description
 | -------------------- | -----------
-| `updateInterval`     | The time between updates (In milliseconds). / <br><br> **Default value:** `300000 (5 minutes)`
+| `prettyName`         | Pretty print the name of each JSON key (remove camelCase and underscores). <br><br> **Default value:** `true`
+| `title`              | Title to display at the top of the module. <br><br> **Default value:** `JSON Feed`
 | `url`                | The url of the json feed. <br><br> **Default value:** `REQUIRED`
+| `updateInterval`     | The time between updates (In milliseconds). / <br><br> **Default value:** `300000 (5 minutes)`
+| `values`             | Specify specific values from the json feed to only show what you need. <br><br>**Example:** `["key1", "key2", "anotherThing"]`<br> **Default value:** `[]`
