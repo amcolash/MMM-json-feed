@@ -10,16 +10,16 @@ It is very simple to set up this module, a sample configuration looks like this:
 ```
 modules: [
   {
-		module: 'MMM-json-feed',
-		position: 'bottom_bar',
-		config: {
+    module: 'MMM-json-feed',
+    position: 'bottom_bar',
+    config: {
       prettyName: true,
       title: 'JSON Feed',
-			url: 'http://your.server.json.here/abc.json',
-			updateInterval: 60000 // update interval in milliseconds
+      url: 'http://your.server.json.here/abc.json',
+      updateInterval: 60000 // update interval in milliseconds
       values: []
-		}
-	}
+    }
+  }
 ]
 ```
 
