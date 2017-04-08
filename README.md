@@ -17,9 +17,9 @@ modules: [
     }
   }
 ]
+```
 
 ## Configuration Options
-```
 
 | Option               | Description
 | -------------------- | -----------
