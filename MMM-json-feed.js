@@ -5,6 +5,7 @@ Module.register("MMM-json-feed", {
   result: {},
   defaults: {
     prettyName: true,
+    stripName: true,
     title: 'JSON Feed',
     url: '',
     updateInterval: 600000,
@@ -43,8 +44,9 @@ Module.register("MMM-json-feed", {
       var values = this.config.values;
       if (values.length > 0) {
         for (var i = 0; i < values.length; i++) {
-          if (data[values[i]]) {
-            tableElement.appendChild(this.addValue(values[i], data[values[i]]));
+          var val = this.getValue(data, values[i]);
+          if (val) {
+            tableElement.appendChild(this.addValue(values[i], val));
           }
         }
       } else {
@@ -65,8 +67,27 @@ Module.register("MMM-json-feed", {
     return wrapper;
   },
 
+  getValue: function(data, value) {
+    if (data && value) {
+      var split = value.split(".");
+      var current = data;
+      while (split.length > 0) {
+        current = current[split.shift()];
+      }
+
+      return current;
+    }
+
+    return null;
+  },
+
   addValue: function(name, value) {
     var row = document.createElement("tr");
+    if (this.config.stripName) {
+      var split = name.split(".");
+      name = split[split.length - 1];
+    }
+
     if (this.config.prettyName) {
       name = name.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
       name = name.split("_").join(" ");
