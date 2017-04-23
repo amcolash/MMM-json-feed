@@ -1,7 +1,7 @@
 # MMM-json-feed
 A MagicMirror module that displays information from any json source
 
-This code is partially copied from the very simple [stock ticker](https://github.com/alexyak/stocks) from _alexyak_.
+This code is partially copied from the very simple [stock ticker](https://github.com/alexyak/stocks) from _@alexyak_.
 
 
 ## Configuration
