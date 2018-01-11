@@ -4,6 +4,21 @@ A MagicMirror module that displays information from any json source
 This code is partially copied from the very simple [stock ticker](https://github.com/alexyak/stocks) from _@alexyak_.
 
 
+## What it Looks Like!
+Nothing too pretty, just the data you want to see :)
+
+![Screenshot](https://raw.githubusercontent.com/amcolash/MMM-json-feed/master/Screenshot.png)
+
+Here is the above json example data:
+```
+{
+  "andrewMcolash":true,
+  "AndrewMc":"123",
+  "test_this":["a","b","c"],
+  "Test_This":{"e":true,"f":"abc"}
+}
+```
+
 ## Configuration
 It is very simple to set up this module, a sample configuration looks like this:
 
