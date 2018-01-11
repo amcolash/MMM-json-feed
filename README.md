@@ -6,6 +6,7 @@ This code is partially copied from the very simple [stock ticker](https://github
 
 ## What it Looks Like!
 Nothing too pretty, just the data you want to see :)
+There are some config options to make the json keys a bit prettier though, mentioned below in the config.
 
 ![Screenshot](https://raw.githubusercontent.com/amcolash/MMM-json-feed/master/Screenshot.png)
 
