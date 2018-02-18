@@ -4,28 +4,14 @@ Module.register("MMM-json-feed", {
 
   result: {},
   defaults: {
-    prettyName: true,
-    stripName: true,
-    title: "JSON Feed",
+    title: "Bus Routes",
     url: "",
     updateInterval: 600000,
-    values: [],
-    arrayName: "",
   },
 
   start: function() {
     this.getStats();
     this.scheduleUpdate();
-  },
-
-  isEmpty: function(obj) {
-    for(var key in obj) {
-      if(obj.hasOwnProperty(key)) {
-        return false;
-      }
-    }
-
-    return true;
   },
 
   getDom: function() {
@@ -38,53 +24,66 @@ Module.register("MMM-json-feed", {
     statElement.innerHTML = title;
     wrapper.appendChild(statElement);
 
-    if (data && !this.isEmpty(data)) {
+    if (data) {
+      // Make a table element to inject our data into
       var tableElement = document.createElement("table");
+      wrapper.appendChild(tableElement);
 
-      console.log(data);
+      // if (this.fakeData) {
+      //   data = this.fakeData;
+      // }
 
-      var array = 1;
-      if (this.config.arrayName.length > 0) {
-        data = data[this.config.arrayName];
-        array = data.length;
+      // No busses today
+      if (data.services === undefined || data.services.length === 0) {
+        tableElement.appendChild(this.addRow("No bus service today"));
+        return wrapper;
       }
 
-      var values = this.config.values;
-      if (values.length > 0) {
-        for (var i = 0; i < array; i++) {
-          var arrayRow = "";
-          for (var j = 0; j < values.length; j++) {
-            if (array == 1) {
-              var val = this.getValue(data, values[j]);
-            } else {
-              var val = this.getValue(data[i], values[j]);
-            }
-            if (val) {
-              if (array == 1) {
-                tableElement.appendChild(this.addValue(values[j], val));
-              } else {
-                arrayRow += values[j] + ": " + val + ", ";
-              }
-            }
-          }
+      // We care about the services array portion of the json
+      data = data.services;
 
-          console.log(arrayRow);
+      // Make some variables to keep track of multiple rows
+      var counter = 0;
+      var row = "";
 
-          if (arrayRow.length > 0) {
-            arrayRow = arrayRow.substr(0, arrayRow.length - 2);
-            tableElement.appendChild(this.addValue(arrayRow));
-          }
+      // Loop through the route data we got
+      for (var i = 0; i < data.length; i++) {
+        // Parse the times from the data
+        var time1 = new Date(data[i].next.time);
+        var time2 = new Date(data[i].subsequent.time);
+
+        // Append the route number and times to the current row
+        row += "#" + data[i].no + ": " + this.getTime(time1) + ", " + this.getTime(time2);
+
+        // Increment our counter keeping track of how many routes in the current row
+        counter++;
+
+        // Some special logic to keep track of our separator character "|", but could be whatever you want
+        if (counter <= 2 && i < data.length - 1) {
+          row += " | ";
         }
-      } else {
-        for (var key in data) {
-          if (data.hasOwnProperty(key)) {
-            tableElement.appendChild(this.addValue(key, data[key]));
-          }
+
+        // After 3 routes, make the row and start again
+        if (counter == 3) {
+          console.log(row)
+
+          // Append a row to the html table
+          tableElement.appendChild(this.addRow(row));
+
+          // Reset counter and string
+          row = "";
+          counter = 0;
         }
+      }
+
+      // If we have less than 3 items in the last row
+      if (row.length > 0) {
+        tableElement.appendChild(this.addRow(row));
       }
 
       wrapper.appendChild(tableElement);
     } else {
+      console.error(result);
       var error = document.createElement("span");
       error.innerHTML = "Error fetching stats.";
       wrapper.appendChild(error);
@@ -93,34 +92,15 @@ Module.register("MMM-json-feed", {
     return wrapper;
   },
 
-  getValue: function(data, value) {
-    if (data && value) {
-      var split = value.split(".");
-      var current = data;
-      while (split.length > 0) {
-        current = current[split.shift()];
-      }
-
-      return current;
-    }
-
-    return null;
+  // Custom format for time
+  getTime: function(date) {
+    // More ways to deal with Date here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+    return date.getHours() + ":" + date.getMinutes();
   },
 
-  addValue: function(name, value) {
+  addRow: function(value) {
     var row = document.createElement("tr");
-    if (this.config.stripName && value !== undefined) {
-      var split = name.split(".");
-      name = split[split.length - 1];
-    }
-
-    if (this.config.prettyName) {
-      name = name.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
-      name = name.split("_").join(" ");
-      name = name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    }
-
-    row.innerHTML = name + (value !== undefined ? ": " + JSON.stringify(value) : "");
+    row.innerHTML = value;
     return row;
   },
 
@@ -149,4 +129,99 @@ Module.register("MMM-json-feed", {
     }
   },
 
+
+  fakeData: {
+    "services": [
+      {
+        "no": "15",
+        "next": {
+          "time": "2017-07-18T01:30:37+00:00",
+          "duration_ms": -34445,
+          "lat": 1.3148358333333334,
+          "lng": 103.90915083333333,
+          "load": "Standing Available",
+          "feature": "WAB"
+        },
+        "subsequent": {
+          "time": "2017-07-18T01:36:11+00:00",
+          "duration_ms": 299555,
+          "lat": 1.3265658333333334,
+          "lng": 103.9059575,
+          "feature": "WAB"
+        }
+      },
+      {
+        "no": "150",
+        "next": {
+          "time": "2017-07-18T01:32:44+00:00",
+          "duration_ms": 92555,
+          "lat": 1.3196148333333333,
+          "lng": 103.9014965,
+          "load": "Seats Available",
+          "feature": "WAB"
+        },
+        "subsequent": {
+          "time": "2017-07-18T01:51:16+00:00",
+          "duration_ms": 1204555,
+          "lat": 0,
+          "lng": 0,
+          "feature": "WAB"
+        }
+      },
+      {
+        "no": "155",
+        "next": {
+          "time": "2017-07-18T01:32:36+00:00",
+          "duration_ms": 84555,
+          "lat": 1.319155,
+          "lng": 103.90471016666666,
+          "load": "Seats Available",
+          "feature": "WAB"
+        },
+        "subsequent": {
+          "time": "2017-07-18T01:43:18+00:00",
+          "duration_ms": 726555,
+          "lat": 1.3189929999999999,
+          "lng": 103.88656266666666,
+          "feature": "WAB"
+        }
+      },
+      {
+        "no": "155",
+        "next": {
+          "time": "2017-07-18T01:32:36+00:00",
+          "duration_ms": 84555,
+          "lat": 1.319155,
+          "lng": 103.90471016666666,
+          "load": "Seats Available",
+          "feature": "WAB"
+        },
+        "subsequent": {
+          "time": "2017-07-18T01:43:18+00:00",
+          "duration_ms": 726555,
+          "lat": 1.3189929999999999,
+          "lng": 103.88656266666666,
+          "feature": "WAB"
+        }
+      },
+      {
+        "no": "155",
+        "next": {
+          "time": "2017-07-18T01:32:36+00:00",
+          "duration_ms": 84555,
+          "lat": 1.319155,
+          "lng": 103.90471016666666,
+          "load": "Seats Available",
+          "feature": "WAB"
+        },
+        "subsequent": {
+          "time": "2017-07-18T01:43:18+00:00",
+          "duration_ms": 726555,
+          "lat": 1.3189929999999999,
+          "lng": 103.88656266666666,
+          "feature": "WAB"
+        }
+      }
+    ]
+  }
 });
