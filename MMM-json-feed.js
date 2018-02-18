@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Module.register("MMM-json-feed", {
 
@@ -6,10 +6,11 @@ Module.register("MMM-json-feed", {
   defaults: {
     prettyName: true,
     stripName: true,
-    title: 'JSON Feed',
-    url: '',
+    title: "JSON Feed",
+    url: "",
     updateInterval: 600000,
-    values: []
+    values: [],
+    arrayName: "",
   },
 
   start: function() {
@@ -29,7 +30,7 @@ Module.register("MMM-json-feed", {
 
   getDom: function() {
     var wrapper = document.createElement("ticker");
-    wrapper.className = 'dimmed small';
+    wrapper.className = "dimmed small";
 
     var data = this.result;
     var statElement =  document.createElement("header");
@@ -40,13 +41,38 @@ Module.register("MMM-json-feed", {
     if (data && !this.isEmpty(data)) {
       var tableElement = document.createElement("table");
 
+      console.log(data);
+
+      var array = 1;
+      if (this.config.arrayName.length > 0) {
+        data = data[this.config.arrayName];
+        array = data.length;
+      }
 
       var values = this.config.values;
       if (values.length > 0) {
-        for (var i = 0; i < values.length; i++) {
-          var val = this.getValue(data, values[i]);
-          if (val) {
-            tableElement.appendChild(this.addValue(values[i], val));
+        for (var i = 0; i < array; i++) {
+          var arrayRow = "";
+          for (var j = 0; j < values.length; j++) {
+            if (array == 1) {
+              var val = this.getValue(data, values[j]);
+            } else {
+              var val = this.getValue(data[i], values[j]);
+            }
+            if (val) {
+              if (array == 1) {
+                tableElement.appendChild(this.addValue(values[j], val));
+              } else {
+                arrayRow += values[j] + ": " + val + ", ";
+              }
+            }
+          }
+
+          console.log(arrayRow);
+
+          if (arrayRow.length > 0) {
+            arrayRow = arrayRow.substr(0, arrayRow.length - 2);
+            tableElement.appendChild(this.addValue(arrayRow));
           }
         }
       } else {
@@ -83,7 +109,7 @@ Module.register("MMM-json-feed", {
 
   addValue: function(name, value) {
     var row = document.createElement("tr");
-    if (this.config.stripName) {
+    if (this.config.stripName && value !== undefined) {
       var split = name.split(".");
       name = split[split.length - 1];
     }
@@ -93,7 +119,8 @@ Module.register("MMM-json-feed", {
       name = name.split("_").join(" ");
       name = name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
-    row.innerHTML = name + ": " + JSON.stringify(value);
+
+    row.innerHTML = name + (value !== undefined ? ": " + JSON.stringify(value) : "");
     return row;
   },
 
@@ -110,7 +137,7 @@ Module.register("MMM-json-feed", {
   },
 
   getStats: function () {
-    this.sendSocketNotification('GET_STATS', this.config.url);
+    this.sendSocketNotification("GET_STATS", this.config.url);
   },
 
   socketNotificationReceived: function(notification, payload) {
