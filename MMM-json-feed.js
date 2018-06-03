@@ -9,7 +9,8 @@ Module.register("MMM-json-feed", {
     title: "JSON Feed",
     url: "",
     updateInterval: 600000,
-    values: []
+    values: [],
+    replaceName: [],
   },
 
   start: function() {
@@ -83,18 +84,46 @@ Module.register("MMM-json-feed", {
 
   addValue: function(name, value) {
     var row = document.createElement("tr");
-    if (this.config.stripName) {
-      var split = name.split(".");
-      name = split[split.length - 1];
+
+    if (this.matchesReplace(name)) {
+      name = this.replaceName(name);
+    } else {
+      if (this.config.stripName) {
+        var split = name.split(".");
+        name = split[split.length - 1];
+      }
+  
+      if (this.config.prettyName) {
+        name = name.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
+        name = name.split("_").join(" ");
+        name = name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+      }
     }
 
-    if (this.config.prettyName) {
-      name = name.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
-      name = name.split("_").join(" ");
-      name = name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    }
     row.innerHTML = name + ": " + JSON.stringify(value);
     return row;
+  },
+
+  matchesReplace: function(name) {
+    for (var i = 0; i < this.config.replaceName.length; i++) {
+      var n = this.config.replaceName[i];
+      if (n[0] === name) {
+        return true;
+      }
+    }
+
+    return false;
+  },
+
+  replaceName: function(name) {
+    for (var i = 0; i < this.config.replaceName.length; i++) {
+      var n = this.config.replaceName[i];
+      if (n[0] === name) {
+        return n[1];
+      }
+    }
+
+    return name;
   },
 
   scheduleUpdate: function(delay) {
@@ -116,9 +145,7 @@ Module.register("MMM-json-feed", {
   socketNotificationReceived: function(notification, payload) {
     if (notification === "STATS_RESULT") {
       this.result = payload;
-      var fade = 500;
-      console.log("fade: " + fade);
-      this.updateDom(fade);
+      this.updateDom(500); // 500 is fade
     }
   },
 

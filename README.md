@@ -47,7 +47,7 @@ modules: [
 | `url`                | The url of the json feed. <br><br> **Default value:** `REQUIRED`
 | `updateInterval`     | The time between updates (In milliseconds). <br><br> **Default value:** `300000 (5 minutes)`
 | `values`             | Specify specific values from the json feed to only show what you need. <br><br>**Example:** `["key1", "key2", "keyA.keyB.keyC"]`<br> **Default value:** `[]` (Shows all keys in the object)
-
+| `replaceName`        | Specify key names to replace in the json. This is an array of arrays [find, replace]<br><br>**Example:** `[ ["body", "replaced body"], ["id", "replacedID"] ]`<br>
 
 ## Using an Array of Data and Custom Parsing
 There is an experiemental [branch](https://github.com/amcolash/MMM-json-feed/tree/arrays) that allows you to use a single array of data instead of the default behavior. Currently there is no documentation, but you can check out [issue #3](https://github.com/amcolash/MMM-json-feed/issues/3#issuecomment-366481399) for some information about this custom branch. Like mentioned in the issue, this module is meant for _simple_ use cases and custom use cases probably require their own parsing.
