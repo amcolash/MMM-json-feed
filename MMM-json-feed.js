@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Module.register("MMM-json-feed", {
 
@@ -6,8 +6,8 @@ Module.register("MMM-json-feed", {
   defaults: {
     prettyName: true,
     stripName: true,
-    title: 'JSON Feed',
-    url: '',
+    title: "JSON Feed",
+    url: "",
     updateInterval: 600000,
     values: []
   },
@@ -29,7 +29,7 @@ Module.register("MMM-json-feed", {
 
   getDom: function() {
     var wrapper = document.createElement("ticker");
-    wrapper.className = 'dimmed small';
+    wrapper.className = "dimmed small";
 
     var data = this.result;
     var statElement =  document.createElement("header");
@@ -110,7 +110,7 @@ Module.register("MMM-json-feed", {
   },
 
   getStats: function () {
-    this.sendSocketNotification('GET_STATS', this.config.url);
+    this.sendSocketNotification("GET_STATS", this.config.url);
   },
 
   socketNotificationReceived: function(notification, payload) {
