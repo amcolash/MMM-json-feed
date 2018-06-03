@@ -3,6 +3,7 @@ A MagicMirror module that displays information from any json source
 
 This code is partially copied from the very simple [stock ticker](https://github.com/alexyak/stocks) from _@alexyak_.
 
+__Notice__: I have no intention of adding new features to the code here. Multiple people have asked for more customized features/modules. If you are really adament about getting something cool and awesome, let me know and if I do get time I may be able to help. This project was never meant to be anything big or useful, so show your appreciation if you are asking for a new feature on a dead project. A small donation to the beer fund never hurts (paypal: amcolash@gmail.com). I love open source software and love providing time to my projects, but honestly I don't even use this module so it is not high on my list of things to do. As always, if you make modifications and a PR and we can merge it into the master branch.
 
 ## What it Looks Like!
 Nothing too pretty, just the data you want to see :)
