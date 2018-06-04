@@ -7,7 +7,8 @@ Module.register("MMM-json-feed", {
     prettyName: true,
     stripName: true,
     title: "JSON Feed",
-    url: "",
+    url: "", // Deprecated
+    urls: [], // Added as a new parameter to maintain backwards compatibility
     updateInterval: 600000,
     values: [],
     replaceName: [],
@@ -139,7 +140,7 @@ Module.register("MMM-json-feed", {
   },
 
   getStats: function () {
-    this.sendSocketNotification("GET_STATS", this.config.url);
+    this.sendSocketNotification("GET_STATS", this.config.url, this.config.urls);
   },
 
   socketNotificationReceived: function(notification, payload) {

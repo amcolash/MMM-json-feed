@@ -31,7 +31,10 @@ modules: [
     module: 'MMM-json-feed',
     position: 'bottom_bar',
     config: {
-      url: 'http://your.server.json.here/abc.json'
+      urls: [
+        'http://your.server.json.here/abc1.json',
+        'http://your.server.json.here/abc2.json',
+      ]
     }
   }
 ]
@@ -44,7 +47,8 @@ modules: [
 | `prettyName`         | Pretty print the name of each JSON key (remove camelCase and underscores). <br><br> **Default value:** `true`
 | `stripName`          | Removes all keys before the printed key. <br><br>**Example:** `a.b.c` will print `c`.<br> **Default value:** `true`
 | `title`              | Title to display at the top of the module. <br><br> **Default value:** `JSON Feed`
-| `url`                | The url of the json feed. <br><br> **Default value:** `REQUIRED`
+| `urls`               | An array of urls for your json feeds. Note that duplicate keys *WILL* be clobbered.<br><br> **Default value:** `REQUIRED`
+| `url`                | **DEPRECATED, Please use `urls` instead.**<br>~~The url of the json feed. <br> **Default value:** `REQUIRED`~~
 | `updateInterval`     | The time between updates (In milliseconds). <br><br> **Default value:** `300000 (5 minutes)`
 | `values`             | Specify specific values from the json feed to only show what you need. <br><br>**Example:** `["key1", "key2", "keyA.keyB.keyC"]`<br> **Default value:** `[]` (Shows all keys in the object)
 | `replaceName`        | Specify key names to replace in the json. This is an array of arrays [find, replace]<br><br>**Example:** `[ ["body", "replaced body"], ["id", "replacedID"] ]`<br>
