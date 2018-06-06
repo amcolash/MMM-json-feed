@@ -86,12 +86,17 @@ Module.register("MMM-json-feed", {
   addValue: function(name, value) {
     var row = document.createElement("tr");
 
-    if (this.matchesReplace(name)) {
-      name = this.replaceName(name);
+    console.log(this.config.replaceName);
+    console.log(name)
+
+    var split = name.split(".");
+    var strippedName = split[split.length - 1];
+
+    if (this.matchesReplace(strippedName)) {
+      name = this.replaceName(strippedName);
     } else {
       if (this.config.stripName) {
-        var split = name.split(".");
-        name = split[split.length - 1];
+        name = strippedName;
       }
   
       if (this.config.prettyName) {
@@ -108,7 +113,8 @@ Module.register("MMM-json-feed", {
   matchesReplace: function(name) {
     for (var i = 0; i < this.config.replaceName.length; i++) {
       var n = this.config.replaceName[i];
-      if (n[0] === name) {
+      if (n[0].toLowerCase() === name.toLowerCase()) {
+        console.log("matched")
         return true;
       }
     }
@@ -119,7 +125,7 @@ Module.register("MMM-json-feed", {
   replaceName: function(name) {
     for (var i = 0; i < this.config.replaceName.length; i++) {
       var n = this.config.replaceName[i];
-      if (n[0] === name) {
+      if (n[0].toLowerCase() === name.toLowerCase()) {
         return n[1];
       }
     }
