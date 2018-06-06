@@ -86,24 +86,20 @@ Module.register("MMM-json-feed", {
   addValue: function(name, value) {
     var row = document.createElement("tr");
 
-    console.log(this.config.replaceName);
-    console.log(name)
-
     var split = name.split(".");
     var strippedName = split[split.length - 1];
 
+    if (this.config.stripName) {
+      name = strippedName;
+    }
+
+    // Replace overrides not stripping the name
     if (this.matchesReplace(strippedName)) {
       name = this.replaceName(strippedName);
-    } else {
-      if (this.config.stripName) {
-        name = strippedName;
-      }
-  
-      if (this.config.prettyName) {
-        name = name.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
-        name = name.split("_").join(" ");
-        name = name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-      }
+    } else if (this.config.prettyName) {
+      name = name.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
+      name = name.split("_").join(" ");
+      name = name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
 
     row.innerHTML = name + ": " + JSON.stringify(value);
