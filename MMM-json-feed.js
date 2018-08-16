@@ -142,7 +142,9 @@ Module.register("MMM-json-feed", {
   },
 
   getStats: function () {
-    this.sendSocketNotification("GET_STATS", this.config.url, this.config.urls);
+    var url = (this.config.url.length > 0) ? [this.config.url] : [];
+    var allUrls = this.config.urls.concat(url);
+    this.sendSocketNotification("GET_STATS", allUrls);
   },
 
   socketNotificationReceived: function(notification, payload) {

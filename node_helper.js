@@ -6,16 +6,11 @@ module.exports = NodeHelper.create({
     console.log("mmm-json-feed helper started...");
   },
 
-  getStats: function (url, urls) {
+  getStats: function (urls) {
     var self = this;
 
-    // Gather all of the urls together
-    var allUrls = [];
-    if (url && url.length > 0) { allUrls.push(url); }
-    if (urls && urls.length > 0) { for (var i = 0; i < urls.length; i++) { allUrls.push(urls[i]); } }
-
     // Wait for all promises, then merge data together. Duplicate keys WILL be clobbered.
-    Promise.all(allUrls.map(self.requestAsync))
+    Promise.all(urls.map(self.requestAsync))
       .then(function (allData) {
         var finalData = {};
 
