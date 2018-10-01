@@ -51,8 +51,27 @@ modules: [
 | `url`                | **DEPRECATED, Please use `urls` instead.**<br>~~The url of the json feed. <br> **Default value:** `REQUIRED`~~
 | `updateInterval`     | The time between updates (In milliseconds). <br><br> **Default value:** `300000 (5 minutes)`
 | `values`             | Specify specific values from the json feed to only show what you need. <br><br>**Example:** `["key1", "key2", "keyA.keyB.keyC"]`<br> **Default value:** `[]` (Shows all keys in the object)
-| `arrayName`          | Name of array of items to iterate through (i.e. if you have json { messages: [ {id: 1}, {id: 2}, {id: 3} ] }, you would use "messages" as the array name.<br><br> **Default value:** `undefined`
+| `arrayName`          | Name of array of items to iterate through.<br><br> **Default value:** `undefined`
 | `replaceName`        | Specify key names to replace in the json. This is an array of arrays [find, replace]<br><br>**Example:** `[ ["body", "replaced body"], ["id", "replacedID"] ]`<br>
 
 ## Using an Array of Data and Custom Parsing
-There is an experiemental [branch](https://github.com/amcolash/MMM-json-feed/tree/arrays) that allows you to use a single array of data instead of the default behavior. Currently there is no documentation, but you can check out [issue #3](https://github.com/amcolash/MMM-json-feed/issues/3#issuecomment-366481399) for some information about this custom branch. Like mentioned in the issue, this module is meant for _simple_ use cases and custom use cases probably require their own parsing.
+You can use the new config `arrayName` to parse through an array and then add parts from each object.
+
+For the given json:
+```
+{
+  messages: [
+    { name: "a", id: 1, somethingElse: false },
+    { name: "b", id: 2, somethingElse: false },
+    { name: "c", id: 3, somethingElse: true }
+  ]
+}
+```
+you could have in your config (to show only the parts you care about):
+```
+config: {
+  ...
+  arrayName: "messages",
+  values: [ "name", "id" ]
+}
+```
