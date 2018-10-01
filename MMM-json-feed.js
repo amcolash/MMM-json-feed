@@ -12,6 +12,7 @@ Module.register("MMM-json-feed", {
     updateInterval: 600000,
     values: [],
     replaceName: [],
+    arrayName: "",
   },
 
   start: function() {
@@ -41,22 +42,20 @@ Module.register("MMM-json-feed", {
 
     if (data && !this.isEmpty(data)) {
       var tableElement = document.createElement("table");
-
-
       var values = this.config.values;
-      if (values.length > 0) {
-        for (var i = 0; i < values.length; i++) {
-          var val = this.getValue(data, values[i]);
-          if (val) {
-            tableElement.appendChild(this.addValue(values[i], val));
+
+      if (this.config.arrayName.length > 0) {
+        data = data[this.config.arrayName];
+        for (var i = 0; i < data.length; i++) {
+          this.addValues(data[i], values, tableElement);
+          if (i < data.length - 1) {
+            var hr = document.createElement("hr");
+            hr.style = "border-color: #444;"
+            tableElement.appendChild(hr);
           }
         }
       } else {
-        for (var key in data) {
-          if (data.hasOwnProperty(key)) {
-            tableElement.appendChild(this.addValue(key, data[key]));
-          }
-        }
+        this.addValues(data, values, tableElement);
       }
 
       wrapper.appendChild(tableElement);
@@ -67,6 +66,23 @@ Module.register("MMM-json-feed", {
     }
 
     return wrapper;
+  },
+
+  addValues: function(data, values, tableElement) {
+    if (values.length > 0) {
+      for (var i = 0; i < values.length; i++) {
+        var val = this.getValue(data, values[i]);
+        if (val) {
+          tableElement.appendChild(this.addValue(values[i], val));
+        }
+      }
+    } else {
+      for (var key in data) {
+        if (data.hasOwnProperty(key)) {
+          tableElement.appendChild(this.addValue(key, data[key]));
+        }
+      }
+    }
   },
 
   getValue: function(data, value) {

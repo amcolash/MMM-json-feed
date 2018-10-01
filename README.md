@@ -51,6 +51,7 @@ modules: [
 | `url`                | **DEPRECATED, Please use `urls` instead.**<br>~~The url of the json feed. <br> **Default value:** `REQUIRED`~~
 | `updateInterval`     | The time between updates (In milliseconds). <br><br> **Default value:** `300000 (5 minutes)`
 | `values`             | Specify specific values from the json feed to only show what you need. <br><br>**Example:** `["key1", "key2", "keyA.keyB.keyC"]`<br> **Default value:** `[]` (Shows all keys in the object)
+| `arrayName`          | Name of array of items to iterate through (i.e. if you have json { messages: [ {id: 1}, {id: 2}, {id: 3} ] }, you would use "messages" as the array name.<br><br> **Default value:** `undefined`
 | `replaceName`        | Specify key names to replace in the json. This is an array of arrays [find, replace]<br><br>**Example:** `[ ["body", "replaced body"], ["id", "replacedID"] ]`<br>
 
 ## Using an Array of Data and Custom Parsing
