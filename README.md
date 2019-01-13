@@ -22,6 +22,14 @@ Here is the above json example data:
 }
 ```
 
+## Install
+`cd MagicMirror/modules`
+`git clone https://github.com/amcolash/MMM-json-feed.git`
+
+## Update
+`cd MagicMirror/modules/MMM-json-feed`
+`git pull`
+
 ## Configuration
 It is very simple to set up this module, a sample configuration looks like this:
 
@@ -52,6 +60,7 @@ modules: [
 | `updateInterval`     | The time between updates (In milliseconds). <br><br> **Default value:** `300000 (5 minutes)`
 | `values`             | Specify specific values from the json feed to only show what you need. <br><br>**Example:** `["key1", "key2", "keyA.keyB.keyC"]`<br> **Default value:** `[]` (Shows all keys in the object)
 | `arrayName`          | Name of array of items to iterate through.<br><br> **Default value:** `undefined`
+| `arraySize`          | Number of array of items to show.<br><br> **Default value:** `999`
 | `replaceName`        | Specify key names to replace in the json. This is an array of arrays [find, replace]<br><br>**Example:** `[ ["body", "replaced body"], ["id", "replacedID"] ]`<br>
 
 ## Using an Array of Data and Custom Parsing
@@ -67,11 +76,12 @@ For the given json:
   ]
 }
 ```
-you could have in your config (to show only the parts you care about):
+you could have in your config (to show only the parts you care about and limit to 5 entries):
 ```
 config: {
   ...
   arrayName: "messages",
+  arraySize: 5,
   values: [ "name", "id" ]
 }
 ```

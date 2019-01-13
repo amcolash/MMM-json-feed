@@ -2,6 +2,7 @@
 
 Module.register("MMM-json-feed", {
 
+  firstUpdate: true,
   result: {},
   defaults: {
     prettyName: true,
@@ -13,6 +14,7 @@ Module.register("MMM-json-feed", {
     values: [],
     replaceName: [],
     arrayName: "",
+    arraySize: 999
   },
 
   start: function() {
@@ -45,14 +47,19 @@ Module.register("MMM-json-feed", {
       var values = this.config.values;
 
       if (this.config.arrayName.length > 0) {
-        data = data[this.config.arrayName];
-        for (var i = 0; i < data.length; i++) {
-          this.addValues(data[i], values, tableElement);
-          if (i < data.length - 1) {
-            var hr = document.createElement("hr");
-            hr.style = "border-color: #444;"
-            tableElement.appendChild(hr);
+        try {
+          data = this.byString(data, this.config.arrayName);
+          for (var i = 0; i < data.length && i < this.config.arraySize; i++) {
+            this.addValues(data[i], values, tableElement);
+            if (i < data.length - 1) {
+              var hr = document.createElement("hr");
+              hr.style = "border-color: #444;"
+              tableElement.appendChild(hr);
+            }
           }
+        } catch (e) {
+          console.error(e);
+          this.addValues(data, values, tableElement);  
         }
       } else {
         this.addValues(data, values, tableElement);
@@ -61,7 +68,7 @@ Module.register("MMM-json-feed", {
       wrapper.appendChild(tableElement);
     } else {
       var error = document.createElement("span");
-      error.innerHTML = "Error fetching stats.";
+      error.innerHTML = this.firstUpdate ? "Fetching stats" : "Error fetching stats.";
       wrapper.appendChild(error);
     }
 
@@ -69,6 +76,7 @@ Module.register("MMM-json-feed", {
   },
 
   addValues: function(data, values, tableElement) {
+    console.log(data);
     if (values.length > 0) {
       for (var i = 0; i < values.length; i++) {
         var val = this.getValue(data, values[i]);
@@ -118,7 +126,10 @@ Module.register("MMM-json-feed", {
       name = name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
 
-    row.innerHTML = name + ": " + JSON.stringify(value);
+    row.innerHTML = "";
+
+    if (name.length > 0) row.innerHTML = name + ": ";
+    row.innerHTML += JSON.stringify(value);
     return row;
   },
 
@@ -166,8 +177,24 @@ Module.register("MMM-json-feed", {
   socketNotificationReceived: function(notification, payload) {
     if (notification === "STATS_RESULT") {
       this.result = payload;
+      this.firstUpdate = false;
       this.updateDom(500); // 500 is fade
     }
   },
 
+  // function from https://stackoverflow.com/questions/6491463
+  byString: function(o, s) {
+    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+    s = s.replace(/^\./, '');           // strip a leading dot
+    var a = s.split('.');
+    for (var i = 0, n = a.length; i < n; ++i) {
+        var k = a[i];
+        if (k in o) {
+            o = o[k];
+        } else {
+            return;
+        }
+    }
+    return o;
+  }
 });
