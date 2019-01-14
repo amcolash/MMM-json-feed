@@ -128,8 +128,12 @@ Module.register("MMM-json-feed", {
 
     row.innerHTML = "";
 
-    if (name.length > 0) row.innerHTML = name + ": ";
-    row.innerHTML += JSON.stringify(value);
+    if (name.length > 0) {
+      name = name.replace(/['"]+/g, '');
+      row.innerHTML = name + ": ";
+    }
+
+    row.innerHTML += JSON.stringify(value).replace(/['"]+/g, '');
     return row;
   },
 
