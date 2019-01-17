@@ -58,6 +58,7 @@ modules: [
 | `urls`               | An array of urls for your json feeds. Note that duplicate keys *WILL* be clobbered.<br><br> **Default value:** `REQUIRED`
 | `url`                | **DEPRECATED, Please use `urls` instead.**<br>~~The url of the json feed. <br> **Default value:** `REQUIRED`~~
 | `updateInterval`     | The time between updates (In milliseconds). <br><br> **Default value:** `300000 (5 minutes)`
+| `singleLine`         | Display all values on a single line.<br><br> **Default value:** `false`
 | `values`             | Specify specific values from the json feed to only show what you need. <br><br>**Example:** `["key1", "key2", "keyA.keyB.keyC"]`<br> **Default value:** `[]` (Shows all keys in the object)
 | `arrayName`          | Name of array of items to iterate through.<br><br> **Default value:** `undefined`
 | `arraySize`          | Number of array of items to show.<br><br> **Default value:** `999`

@@ -11,6 +11,7 @@ Module.register("MMM-json-feed", {
     url: "", // Deprecated
     urls: [], // Added as a new parameter to maintain backwards compatibility
     updateInterval: 600000,
+    singleLine: false,
     values: [],
     replaceName: [],
     arrayName: "",
@@ -108,7 +109,8 @@ Module.register("MMM-json-feed", {
   },
 
   addValue: function(name, value) {
-    var row = document.createElement("tr");
+    // This is a nasty hack, don't do this in prod kids
+    var row = this.config.singleLine ? document.createElement("span") : document.createElement("tr");
 
     var split = name.split(".");
     var strippedName = split[split.length - 1];
