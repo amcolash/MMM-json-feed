@@ -50,17 +50,21 @@ Module.register("MMM-json-feed", {
       if (this.config.arrayName.length > 0) {
         try {
           data = this.byString(data, this.config.arrayName);
-          for (var i = 0; i < data.length && i < this.config.arraySize; i++) {
-            this.addValues(data[i], values, tableElement);
-            if (i < data.length - 1) {
-              var hr = document.createElement("hr");
-              hr.style = "border-color: #444;"
-              tableElement.appendChild(hr);
+          if (data && data.length) {
+            for (var i = 0; i < data.length && i < this.config.arraySize; i++) {
+              this.addValues(data[i], values, tableElement);
+              if (i < data.length - 1) {
+                var hr = document.createElement("hr");
+                hr.style = "border-color: #444;"
+                tableElement.appendChild(hr);
+              }
             }
+          } else {
+            this.addValues(data, values, tableElement);
           }
         } catch (e) {
           console.error(e);
-          this.addValues(data, values, tableElement);  
+          this.addValues(data, values, tableElement);
         }
       } else {
         this.addValues(data, values, tableElement);
