@@ -1,6 +1,8 @@
 # MMM-json-feed
 A MagicMirror module that displays information from any json source
 
+# This module is not maintained and will not recieve any support from me. Please take a look at alternatives [here](https://github.com/MichMich/MagicMirror/wiki/3rd-party-modules).
+
 ![status](https://img.shields.io/badge/status-not%20maintained-red.svg)
 
 This code is partially copied from the very simple [stock ticker](https://github.com/alexyak/stocks) from [_@alexyak_](https://github.com/alexyak).
